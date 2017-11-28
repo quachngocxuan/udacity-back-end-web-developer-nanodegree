@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<div class="flex-container-column">
+		<header class="flex-container-row">
+			<div class="padder"></div>
+			<div class="app-title"><h1>Catalog App</h1></div>
+			<div class="app-logout"><button class="btn btn-danger">Logout</button></div>
+			<div class="padder"></div>
+		</header>
+		<article class="flex-container-row main-section">
+			<div class="padder"></div>
+			<section class="main-content">
+				<form action = "{{ request.path }}" method = "post">
+					<h2>Add Item</h2>
+					<p>Title</p>
+					<p><input name="title"></p>
+					<p>Description</p>
+					<p><input name="desc"></p>
+					<p>Category</p>
+					<p>
+						<select name="cid">
+							{% for category in categories %}
+							<option value="{{ category.id }}">{{ category.title }}</option>
+        					{% endfor %}
+						</select>
+					</p>
+					<p><button class="btn btn-success">Save</button></p>
+				</form>
+			</section>
+			<div class="padder"></div>
+		</article>
+	</div>
+</body>
+</html>

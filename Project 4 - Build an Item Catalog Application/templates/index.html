@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<div class="flex-container-column">
+		<header class="flex-container-row">
+			<div class="padder"></div>
+			<div class="app-title"><h1>Catalog App</h1></div>
+			<div class="app-logout"><button class="btn btn-danger">Logout</button></div>
+			<div class="padder"></div>
+		</header>
+		<article class="flex-container-row main-section">
+			<div class="padder"></div>
+			<div class="main-content flex-container-row">
+				<section class="category-section">
+					<h4><a href="/add-category">Add category</a></h4>
+					<h2>Categories</h2>
+					{% for category in categories %}
+					<p>{{ category.title }}</p>
+					{% endfor %}
+				</section>
+				<section class="item-section">
+					<h4><a href="/add-item">Add item</a></h4>
+					<h2>Latest items</h2>
+					<p>Stick <em>(Hockkey)</em></p>
+					<p>Stick <em>(Hockkey)</em></p>
+					<p>Stick <em>(Hockkey)</em></p>
+				</section>
+			</div>
+			<div class="padder"></div>
+		</article>
+	</div>
+</body>
+</html>

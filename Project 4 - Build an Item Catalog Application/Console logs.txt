@@ -1,0 +1,27 @@
+Một số thao tác quan trọng:
+
+1. Cài đặt Flask
+pip install Flask
+pip install flask-sqlalchemy
+
+2. Chuẩn bị các trang htmls, đưa các trang html vào thư mục templates (thư mục yêu cầu mặc định cho template jinga2), 
+các file tĩnh vào thư mục static (thư mục jinga2 yêu cầu)
+Đổi link css thành dạng kiểu như sau:
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+3. Đặt port trong .py là 8080 thì mới truy cập được ngoài c9
+
+4. Chạy file database_setup.py để tạo file catalog.db (thực ra không cần vì application.py) nó sẽ tự sinh ra)
+python database_setup.py
+
+------------
+Tổng kết một số lệnh phổ dụng
+
+1. Install virtual environment for python
+pip install virtualenv
+
+2. Create an environment
+virtualenv venv
+
+3. Install Flask
+pip install Flask
