@@ -61,9 +61,25 @@ def Add_Item():
 		else:
 			return render_template('400.html')
 			
-@app.route('/edit-item', methods=['GET', 'POST'])
-def Edit_Item():
-	return render_template('edit-item.html')
+@app.route('/edit-item/<int:itemID>', methods=['GET', 'POST'])
+def Edit_Item(itemID):
+	item = session.query(Item).get(itemID)
+	
+	if request.method == 'GET':
+		categories = session.query(Category)
+		return render_template('edit-item.html', item=item, categories=categories)
+	elif request.method == 'POST':
+		if request.form['title'] != '' and request.form['cid'] != '':
+			item.title = request.form['title']
+			item.desc = request.form['desc']
+			item.cid = request.form['cid']
+			
+			session.commit()
+			
+			flash('Item was successfully updated')
+			return redirect(url_for('Index'))
+		else:
+			return render_template('400.html')
 
 @app.route('/delete-item', methods=['GET', 'POST'])
 def Delete_Item():
