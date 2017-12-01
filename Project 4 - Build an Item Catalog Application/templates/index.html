@@ -30,7 +30,7 @@
 					<h4><a href="/add-item">Add item</a></h4>
 					<h2>Latest items</h2>
 					{% for item in items %}
-					<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a></p>
+					<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a> <em>({{ item.category.title }})</em></p>
 					{% endfor %}
 				</section>
 			</div>

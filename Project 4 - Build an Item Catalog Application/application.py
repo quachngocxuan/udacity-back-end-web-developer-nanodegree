@@ -14,7 +14,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 def Index():
 	categories = session.query(Category)
 	items = session.query(Item).order_by(desc(Item.created_on)).limit(10)
-	return render_template("index.html", categories=categories)
+	return render_template("index.html", categories=categories, items=items)
 
 @app.route('/category-details/<id>')
 def Category_Details():
@@ -46,11 +46,21 @@ def Item_Details():
 
 @app.route('/add-item', methods=['GET', 'POST'])
 def Add_Item():
-	#if request.method == 'GET':
-		
-	categories = session.query(Category)
-	return render_template('add-item.html', categories=categories)
-
+	if request.method == 'GET':
+		categories = session.query(Category)
+		return render_template('add-item.html', categories=categories)
+	elif request.method == 'POST':
+		if request.form['title'] != '' and request.form['cid'] != '':
+			item = Item(title=request.form['title'], desc=request.form['desc'], cid=request.form['cid'], created_on=datetime.datetime.now())
+			
+			session.add(item)
+			session.commit()
+			
+			flash('Item was successfully added')
+			return redirect(url_for('Index'))
+		else:
+			return render_template('400.html')
+			
 @app.route('/edit-item', methods=['GET', 'POST'])
 def Edit_Item():
 	return render_template('edit-item.html')
