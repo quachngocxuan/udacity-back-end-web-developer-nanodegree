@@ -4,11 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
 import datetime
 
-
 app = Flask(__name__)
 app.secret_key = 'super secret key'
 app.config['SESSION_TYPE'] = 'filesystem'
-	
 	
 @app.route('/')
 def Index():
@@ -27,7 +25,7 @@ def Add_Category():
 			session.add(category)
 			session.commit()
          
-			flash('Category was successfully added')
+			flash('Category was successfully added', 'success')
 			return redirect(url_for('Index'))
 		else:
 			return render_template('400.html')
@@ -56,7 +54,7 @@ def Add_Item():
 			session.add(item)
 			session.commit()
 			
-			flash('Item was successfully added')
+			flash('Item was successfully added', 'success')
 			return redirect(url_for('Index'))
 		else:
 			return render_template('400.html')
@@ -76,14 +74,27 @@ def Edit_Item(itemID):
 			
 			session.commit()
 			
-			flash('Item was successfully updated')
+			flash('Item was successfully updated', 'success')
 			return redirect(url_for('Item_Details', itemID=item.id))
 		else:
 			return render_template('400.html')
 
 @app.route('/delete-item/<int:itemID>', methods=['GET', 'POST'])
 def Delete_Item(itemID):
-	return render_template('delete-item.html')
+	if request.method == 'GET':
+		return render_template('delete-item.html')
+	elif request.method == 'POST':
+		item = session.query(Item).get(itemID)
+		
+		if item == None:
+			flash('Cannot delete the item as it is not existing!', 'danger')
+			return redirect(url_for('Index'))
+		else:
+			session.delete(item)
+			session.commit()
+			
+			flash('Item was deleted successfully!', 'success')
+			return redirect(url_for('Index'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def Login():

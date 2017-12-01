@@ -6,6 +6,9 @@
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="flex-container-column">
@@ -17,13 +20,27 @@
 		</header>
 		<article class="flex-container-row main-section">
 			<div class="padder"></div>
-			<section class="main-content">
-				<form>
-					<h2>Delete Item</h2>
-					<p>Are you sure you want to delete?</p>
-					<p><button class="btn btn-success">Delete</button></p>
-				</form>
-			</section>
+			<div class="main-content flex-container-column">
+				<!-- Display message -->
+				{% with messages = get_flashed_messages(with_categories=true) %}
+			     	{% if messages %}
+			           {% for category, message in messages %}
+			           		<div class="alert alert-{{ category }} alert-dismissable">
+							    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+							    <strong>{{ category.title() }}!</strong> {{ message }}
+							</div>
+			           {% endfor %}
+			     	{% endif %}
+			    {% endwith %}
+			    
+				<section class="main-content">
+					<form action = "{{ request.path }}" method = "post">
+						<h2>Delete Item</h2>
+						<p>Are you sure you want to delete?</p>
+						<p><button class="btn btn-success">Delete</button></p>
+					</form>
+				</section>
+			</div>
 			<div class="padder"></div>
 		</article>
 	</div>
