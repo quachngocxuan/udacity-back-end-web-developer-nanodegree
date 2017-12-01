@@ -18,6 +18,11 @@ header {
   margin: auto;
 }
 
+div.app-title  a {
+  color: #333;
+  text-decoration: none;
+}
+
 .app-logout {
   width: 35%;
   margin: auto;
