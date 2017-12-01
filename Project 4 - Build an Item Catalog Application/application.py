@@ -34,14 +34,14 @@ def Add_Category():
 
 @app.route('/items/<int:catID>')
 def Items(catID):
-	current_category = session.query(Category).filter_by(id=catID).first()
+	current_category = session.query(Category).get(catID)
 	categories = session.query(Category)
 	items = session.query(Item).filter_by(cid=catID).order_by(desc(Item.created_on))
 	return render_template('items.html', current_category=current_category, categories=categories, items=items)
 
 @app.route('/item-details/<int:itemID>')
 def Item_Details(itemID):
-	item = session.query(Item).filter_by(id=itemID).first()
+	item = session.query(Item).get(itemID)
 	return render_template('item-details.html', item=item)
 
 @app.route('/add-item', methods=['GET', 'POST'])
