@@ -3,9 +3,15 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Add category</title>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	<script
+	  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+	  crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='parsley.min.js') }}"></script>
 </head>
 <body>
 	<div class="flex-container-column">
@@ -18,15 +24,28 @@
 		<article class="flex-container-row main-section">
 			<div class="padder"></div>
 			<section class="main-content">
-				<form action = "{{ url_for('Add_Category') }}" method = "get">
+				<form action = "{{ url_for('Add_Category') }}" method = "post" id="data-form" data-parsley-validate="">
 					<h2>Add Category</h2>
-					<p>Title</p>
-					<p><input name="title"></p>
+					<p>Title *</p>
+					<p><input name="title" required=""></p>
 					<p><button class="btn btn-success">Save</button></p>
 				</form>
 			</section>
 			<div class="padder"></div>
 		</article>
 	</div>
+	
+	<script type="text/javascript">
+		$(function () {
+		  $('#data-form').parsley().on('field:validated', function() {
+		    var ok = $('.parsley-error').length === 0;
+		    $('.bs-callout-info').toggleClass('hidden', !ok);
+		    $('.bs-callout-warning').toggleClass('hidden', ok);
+		  })
+		  .on('form:submit', function() {
+		    return true; 
+		  });
+		});
+	</script>
 </body>
 </html>

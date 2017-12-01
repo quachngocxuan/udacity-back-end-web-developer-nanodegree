@@ -3,9 +3,15 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Edit item</title>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	<script
+	  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+	  crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='parsley.min.js') }}"></script>
 </head>
 <body>
 	<div class="flex-container-column">
@@ -18,16 +24,18 @@
 		<article class="flex-container-row main-section">
 			<div class="padder"></div>
 			<section class="main-content">
-				<form>
-					<h2>Edit Item</h2>
+				<form action = "{{ request.path }}" method = "post" id="data-form" data-parsley-validate="">
+					<h2>Add Item</h2>
 					<p>Title</p>
-					<p><input id="title"></p>
+					<p><input name="title" required="" autofocus=""></p>
 					<p>Description</p>
-					<p><input id="description"></p>
+					<p><textarea name="desc"></textarea></p>
 					<p>Category</p>
 					<p>
-						<select id="category">
-							<option value="">Option 1</option>
+						<select name="cid">
+							{% for category in categories %}
+							<option value="{{ category.id }}">{{ category.title }}</option>
+        					{% endfor %}
 						</select>
 					</p>
 					<p><button class="btn btn-success">Save</button></p>
@@ -36,5 +44,18 @@
 			<div class="padder"></div>
 		</article>
 	</div>
+	
+	<script type="text/javascript">
+		$(function () {
+		  $('#data-form').parsley().on('field:validated', function() {
+		    var ok = $('.parsley-error').length === 0;
+		    $('.bs-callout-info').toggleClass('hidden', !ok);
+		    $('.bs-callout-warning').toggleClass('hidden', ok);
+		  })
+		  .on('form:submit', function() {
+		    return true; 
+		  });
+		});
+	</script>
 </body>
 </html>

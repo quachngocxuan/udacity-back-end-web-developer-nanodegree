@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Catalog Items</title>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -22,19 +23,28 @@
 					<h4><a href="/add-category">Add category</a></h4>
 					<h2>Categories</h2>
 					{% for category in categories %}
-					<p>{{ category.title }}</p>
+					<p><a href="/category-details/{{ category.id }}">{{ category.title }}</a></p>
 					{% endfor %}
 				</section>
 				<section class="item-section">
 					<h4><a href="/add-item">Add item</a></h4>
 					<h2>Latest items</h2>
-					<p>Stick <em>(Hockkey)</em></p>
-					<p>Stick <em>(Hockkey)</em></p>
-					<p>Stick <em>(Hockkey)</em></p>
+					{% for item in items %}
+					<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a></p>
+					{% endfor %}
 				</section>
 			</div>
 			<div class="padder"></div>
 		</article>
 	</div>
+	
+	<!-- Display message -->
+	{% with messages = get_flashed_messages() %}
+     	{% if messages %}
+           {% for message in messages %}
+           		<script>alert('{{ message }}');</script>
+           {% endfor %}
+     	{% endif %}
+    {% endwith %}
 </body>
 </html>

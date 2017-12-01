@@ -1,7 +1,8 @@
 from flask import Flask, render_template, flash, request, redirect, url_for, jsonify
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
+import datetime
 
 
 app = Flask(__name__)
@@ -11,23 +12,29 @@ app.config['SESSION_TYPE'] = 'filesystem'
 	
 @app.route('/')
 def Index():
-	return render_template("index.html")
+	categories = session.query(Category)
+	items = session.query(Item).order_by(desc(Item.created_on)).limit(10)
+	return render_template("index.html", categories=categories)
 
+@app.route('/category-details/<id>')
+def Category_Details():
+	return render_template('category-details.html', id=id)
+	
 @app.route('/add-category', methods=['POST', 'GET'])
 def Add_Category():
 	if request.method == 'GET':
-		if not request.form['title']:
-			flash('Please enter all the fields', 'error')
-		else:
-			category = Category(title=request.form['title'])
+		return render_template('add-category.html')
+	elif request.method == 'POST':
+		if request.form['title'] != '':
+			category = Category(title=request.form['title'], created_on=datetime.datetime.now())
          
 			session.add(category)
 			session.commit()
          
 			flash('Category was successfully added')
 			return redirect(url_for('Index'))
-	
-	return render_template('add-category.html')
+		else:
+			return render_template('400.html')
 
 @app.route('/items')
 def Items():
@@ -39,6 +46,8 @@ def Item_Details():
 
 @app.route('/add-item', methods=['GET', 'POST'])
 def Add_Item():
+	#if request.method == 'GET':
+		
 	categories = session.query(Category)
 	return render_template('add-item.html', categories=categories)
 
