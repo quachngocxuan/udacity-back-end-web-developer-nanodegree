@@ -7,6 +7,9 @@
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="flex-container-column">
@@ -16,35 +19,40 @@
 			<div class="app-logout"><button class="btn btn-danger">Logout</button></div>
 			<div class="padder"></div>
 		</header>
+		
 		<article class="flex-container-row main-section">
 			<div class="padder"></div>
-			<div class="main-content flex-container-row">
-				<section class="category-section">
-					<h4><a href="/add-category">Add category</a></h4>
-					<h2>Categories</h2>
-					{% for category in categories %}
-					<p><a href="/items/{{ category.id }}">{{ category.title }}</a></p>
-					{% endfor %}
-				</section>
-				<section class="item-section">
-					<h4><a href="/add-item">Add item</a></h4>
-					<h2>Latest items</h2>
-					{% for item in items %}
-					<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a> <em>({{ item.category.title }})</em></p>
-					{% endfor %}
-				</section>
+			<div class="main-content flex-container-column">
+				<!-- Display message -->
+				{% with messages = get_flashed_messages() %}
+			     	{% if messages %}
+			           {% for message in messages %}
+			           		<div class="alert alert-success alert-dismissable">
+							    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+							    <strong>Success!</strong> {{ message }}
+							</div>
+			           {% endfor %}
+			     	{% endif %}
+			    {% endwith %}
+				<div class="main-content flex-container-row">
+					<section class="category-section">
+						<h4><a href="/add-category">Add category</a></h4>
+						<h2>Categories</h2>
+						{% for category in categories %}
+						<p><a href="/items/{{ category.id }}">{{ category.title }}</a></p>
+						{% endfor %}
+					</section>
+					<section class="item-section">
+						<h4><a href="/add-item">Add item</a></h4>
+						<h2>Latest items</h2>
+						{% for item in items %}
+						<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a> <em>({{ item.category.title }})</em></p>
+						{% endfor %}
+					</section>
+				</div>
 			</div>
 			<div class="padder"></div>
 		</article>
 	</div>
-	
-	<!-- Display message -->
-	{% with messages = get_flashed_messages() %}
-     	{% if messages %}
-           {% for message in messages %}
-           		<script>alert('{{ message }}');</script>
-           {% endfor %}
-     	{% endif %}
-    {% endwith %}
 </body>
 </html>

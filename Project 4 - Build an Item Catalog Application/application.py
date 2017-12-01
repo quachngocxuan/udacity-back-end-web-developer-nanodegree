@@ -77,12 +77,12 @@ def Edit_Item(itemID):
 			session.commit()
 			
 			flash('Item was successfully updated')
-			return redirect(url_for('Index'))
+			return redirect(url_for('Item_Details', itemID=item.id))
 		else:
 			return render_template('400.html')
 
-@app.route('/delete-item', methods=['GET', 'POST'])
-def Delete_Item():
+@app.route('/delete-item/<int:itemID>', methods=['GET', 'POST'])
+def Delete_Item(itemID):
 	return render_template('delete-item.html')
 
 @app.route('/login', methods=['GET', 'POST'])
