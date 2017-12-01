@@ -40,9 +40,10 @@ def Add_Category():
 def Items():
 	return render_template('items.html')
 
-@app.route('/item-details')
-def Item_Details():
-	return render_template('item-details.html')
+@app.route('/item-details/<int:itemID>')
+def Item_Details(itemID):
+	item = session.query(Item).filter_by(id=itemID).first()
+	return render_template('item-details.html', item=item)
 
 @app.route('/add-item', methods=['GET', 'POST'])
 def Add_Item():
