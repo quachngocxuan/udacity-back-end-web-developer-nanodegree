@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Category's items</title>
+	<title>Catalog Items</title>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -20,19 +20,31 @@
 			<div class="padder"></div>
 			<div class="main-content flex-container-row">
 				<section class="category-section">
+					<h4><a href="/add-category">Add category</a></h4>
 					<h2>Categories</h2>
-					<p>Soccer</p>
-					<p>Basketball</p>
-					<p>Baseball</p>
+					{% for category in categories %}
+					<p><a href="/items/{{ category.id }}">{{ category.title }}</a></p>
+					{% endfor %}
 				</section>
 				<section class="item-section">
-					<h2>Snowboarding Items (2 items)</h2>
-					<p>Stick</p>
-					<p>Stick</p>
+					<h4><a href="/add-item">Add item</a></h4>
+					<h2>{{ current_category.title }} Items ({{ items.count() }} items) </h2>
+					{% for item in items %}
+					<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a></p>
+					{% endfor %}
 				</section>
 			</div>
 			<div class="padder"></div>
 		</article>
 	</div>
+	
+	<!-- Display message -->
+	{% with messages = get_flashed_messages() %}
+     	{% if messages %}
+           {% for message in messages %}
+           		<script>alert('{{ message }}');</script>
+           {% endfor %}
+     	{% endif %}
+    {% endwith %}
 </body>
 </html>

@@ -15,10 +15,6 @@ def Index():
 	categories = session.query(Category)
 	items = session.query(Item).order_by(desc(Item.created_on)).limit(10)
 	return render_template("index.html", categories=categories, items=items)
-
-@app.route('/category-details/<id>')
-def Category_Details():
-	return render_template('category-details.html', id=id)
 	
 @app.route('/add-category', methods=['POST', 'GET'])
 def Add_Category():
@@ -36,9 +32,12 @@ def Add_Category():
 		else:
 			return render_template('400.html')
 
-@app.route('/items')
-def Items():
-	return render_template('items.html')
+@app.route('/items/<int:catID>')
+def Items(catID):
+	current_category = session.query(Category).filter_by(id=catID).first()
+	categories = session.query(Category)
+	items = session.query(Item).filter_by(cid=catID).order_by(desc(Item.created_on))
+	return render_template('items.html', current_category=current_category, categories=categories, items=items)
 
 @app.route('/item-details/<int:itemID>')
 def Item_Details(itemID):
