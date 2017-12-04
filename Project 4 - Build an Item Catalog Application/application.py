@@ -103,7 +103,13 @@ def Login():
 @app.route('/register', methods=['GET', 'POST'])
 def Register():
 	return render_template('register.html')
+
+@app.route('/catalog.json')
+def Catalog_JSON():
+	categories = session.query(Category)
 	
+	return jsonify(Category=[i.serialize for i in categories])
+
 if __name__ == '__main__':
     
 	engine = create_engine('sqlite:///catalog.db')

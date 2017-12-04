@@ -4,6 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+import json
 
 Base = declarative_base()
 
@@ -14,16 +15,22 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(250), nullable=False)
     created_on = Column(DateTime, nullable=False)
+    items = relationship("Item")
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
-        return {
-            'title': self.title,
-            'created_on': self.created_on,
-            'id': self.id,
-        }
-
+        if len(self.items) == 0:
+            return {
+                'id': self.id,
+                'name': self.title
+            }
+        else:
+            return {
+                'id': self.id,
+                'name': self.title,
+                'Item': [a.serialize for a in self.items]
+            }
 
 class Item(Base):
     __tablename__ = 'item'
@@ -35,6 +42,15 @@ class Item(Base):
     cid = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializable format"""
+        return {
+            'cat_id': self.cid,
+            'description': self.desc,
+            'id': self.id,
+            'title': self.title
+        }
 
 class User(Base):
     __tablename__ = 'user'
