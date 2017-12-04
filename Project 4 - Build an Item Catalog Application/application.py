@@ -21,7 +21,6 @@ def login_required(f):
     return decorated_function
 
 @app.route('/')
-@login_required
 def Index():
 	categories = db_session.query(Category)
 	items = db_session.query(Item).order_by(desc(Item.created_on)).limit(10)
@@ -45,7 +44,6 @@ def Add_Category():
 			return render_template('400.html')
 
 @app.route('/items/<int:catID>')
-@login_required
 def Items(catID):
 	current_category = db_session.query(Category).get(catID)
 	categories = db_session.query(Category)
@@ -53,7 +51,6 @@ def Items(catID):
 	return render_template('items.html', current_category=current_category, categories=categories, items=items)
 
 @app.route('/item-details/<int:itemID>')
-@login_required
 def Item_Details(itemID):
 	item = db_session.query(Item).get(itemID)
 	return render_template('item-details.html', item=item)
@@ -135,10 +132,9 @@ def Login():
 			return redirect(url_for('Index'))
 
 @app.route('/logout')
-@login_required
 def Logout():
 	session.pop('username', None)
-	return redirect(url_for('Login'))
+	return redirect(url_for('Index'))
 	
 @app.route('/register', methods=['GET', 'POST'])
 def Register():
@@ -163,7 +159,6 @@ def Register():
 		db_session.commit()
 		flash('User was successfully added', 'success')
 		return redirect(url_for('Login'))
-			
 
 @app.route('/catalog.json')
 @login_required

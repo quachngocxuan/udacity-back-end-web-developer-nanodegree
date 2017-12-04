@@ -13,7 +13,11 @@
 		<header class="flex-container-row">
 			<div class="padder"></div>
 			<div class="app-title"><h1><a href="/">Catalog App</a></h1></div>
+			{% if 'username' in session %}
 			<div class="app-logout"><form action="/logout" method="get"><button class="btn btn-danger">Logout</button></form></div>
+			{% else %}
+			<div class="app-logout"><form action="/login" method="get"><button class="btn btn-danger">Login</button></form></div>
+			{% endif %}
 			<div class="padder"></div>
 		</header>
 		<article class="flex-container-row main-section">
