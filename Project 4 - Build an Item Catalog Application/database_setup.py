@@ -33,6 +33,7 @@ class Category(Base):
                 'Item': [a.serialize for a in self.items]
             }
 
+
 class Item(Base):
     __tablename__ = 'item'
 
@@ -53,6 +54,7 @@ class Item(Base):
             'title': self.title
         }
 
+
 class User(Base):
     __tablename__ = 'user'
 
@@ -67,6 +69,5 @@ class User(Base):
         return pwd_context.verify(password, self.password)
 
 engine = create_engine('sqlite:///catalog.db')
-
 
 Base.metadata.create_all(engine)
