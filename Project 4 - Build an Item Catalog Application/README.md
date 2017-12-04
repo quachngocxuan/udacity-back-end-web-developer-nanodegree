@@ -14,12 +14,22 @@
 
 ### Installation
 
-Install the passlib
+1. Firstly, you need install ```Flask``` if any
+```
+$ pip install Flask
+```
+
+2. And then install ```SQLAlchemy``` to map objects with database
+```
+$ pip install flask-sqlalchemy
+```
+
+3. And then install the ```passlib```
 ```
 $ sudo pip install passlib
 ```
 
-It may need to change writable permission for the db file
+4. It may need to change writable permission for the db file
 ```
 $ sudo chmod a+w catalog.db
 ```
@@ -65,3 +75,6 @@ Table "user"
 - [Bootstrap](https://getbootstrap.com/) for frontend interface
 - Login form: thanks to [Simple login form](https://bootsnipp.com/snippets/featured/simple-login-form-bootsnipp-style-colorgraph)
 - Form validation: thanks to [ParsleyJS](http://parsleyjs.org/)
+
+## References
+- [Login require Decorator](http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/)
