@@ -12,6 +12,13 @@
 
 ## How to Run
 
+### Installation
+
+Install the passlib
+```
+$ sudo pip install passlib
+```
+
 It may need to change writable permission for the db file
 ```
 $ sudo chmod a+w catalog.db

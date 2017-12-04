@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 import json
+from passlib.apps import custom_app_context as pwd_context
 
 Base = declarative_base()
 
@@ -55,9 +56,15 @@ class Item(Base):
 class User(Base):
     __tablename__ = 'user'
 
-    user = Column(String(50), primary_key=True)
-    password = Column(String(250), nullable=False)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(50), index=True)
+    password = Column(String(64), nullable=False)
 
+    def hash_password(self, password):
+        self.password = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password)
 
 engine = create_engine('sqlite:///catalog.db')
 

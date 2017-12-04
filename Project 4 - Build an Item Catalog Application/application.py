@@ -102,7 +102,28 @@ def Login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def Register():
-	return render_template('register.html')
+	if request.method == 'GET':
+		return render_template('register.html')
+	elif request.method == 'POST':
+		username = request.form['username']
+		password = request.form['password']
+		if username is None or password is None:
+			flash('Missing username or password', 'danger')
+			redirect(url_for('Register'))
+		
+		user = session.query(User).filter_by(username=username).first()
+		if user is not None:
+			flash('Username has been registered, try another!', 'danger')
+			return redirect(url_for('Register'))
+		
+		# Save new user
+		user = User(username=username)
+		user.hash_password(password)
+		session.add(user)
+		session.commit()
+		flash('User was successfully added', 'success')
+		return redirect(url_for('Login'))
+			
 
 @app.route('/catalog.json')
 def Catalog_JSON():
