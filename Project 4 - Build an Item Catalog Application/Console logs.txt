@@ -14,14 +14,6 @@ các file tĩnh vào thư mục static (thư mục jinga2 yêu cầu)
 4. Chạy file database_setup.py để tạo file catalog.db (thực ra không cần vì application.py) nó sẽ tự sinh ra)
 python database_setup.py
 
-------------
-Tổng kết một số lệnh phổ dụng
-
-1. Install virtual environment for python
-pip install virtualenv
-
-2. Create an environment
-virtualenv venv
-
-3. Install Flask
-pip install Flask
+4. Deploy lên heroku
+$ heroku create udacity-catalog-item
+$ git push heroku master
