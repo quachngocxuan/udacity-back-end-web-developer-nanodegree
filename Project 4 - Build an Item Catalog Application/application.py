@@ -13,7 +13,7 @@ import json
 # https://code.google.com/apis/console
 GOOGLE_CLIENT_ID = 'YOUR-CLIENT-ID'
 GOOGLE_CLIENT_SECRET = 'YOUR-CLIENT-SECRET'
-REDIRECT_URI = '/oauth2callback'  # one of the Redirect URIs from Google APIs console
+REDIRECT_URI = '/oauth2callback'
 
 app = Flask(__name__)
 app.secret_key = 'up to you to guest'
@@ -170,6 +170,7 @@ def Login():
         flash('You have been logged in already!', 'success')
         return redirect(url_for('Index'))
 
+
 @app.route(REDIRECT_URI)
 @google.authorized_handler
 def authorized(resp):
@@ -178,7 +179,7 @@ def authorized(resp):
 
     access_token = session.get('access_token')[0]
     from urllib2 import Request, urlopen, URLError
- 
+
     headers = {'Authorization': 'OAuth '+access_token}
     req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
                   None, headers)
@@ -190,20 +191,21 @@ def authorized(resp):
             session.pop('access_token', None)
 
         return redirect(url_for('Login'))
- 
+
     # get json of user info
     user_info = json.loads(res.read())
-    
+
     # store username in session
     session['username'] = user_info['email']
 
-    user = db_session.query(User).filter_by(username=user_info['email']).first()
-    
+    user = db_session.query(User).filter_by(
+        username=user_info['email']).first()
+
     # Create new user if he is not existed
     if user is None:
         user = User(username=user_info['email'],
                     password='')
-    
+
         db_session.add(user)
         db_session.commit()
 
