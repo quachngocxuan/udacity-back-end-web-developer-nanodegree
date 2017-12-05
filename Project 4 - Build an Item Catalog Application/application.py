@@ -1,12 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 from flask import Flask, render_template, \
     flash, request, redirect, url_for, jsonify, session
+from flask_oauth import OAuth
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
 import datetime
 from functools import wraps
+import json
+
+# https://code.google.com/apis/console
+GOOGLE_CLIENT_ID = 'YOUR-CLIENT-ID'
+GOOGLE_CLIENT_SECRET = 'YOUR-CLIENT-SECRET'
+REDIRECT_URI = '/oauth2callback'  # one of the Redirect URIs from Google APIs console
 
 app = Flask(__name__)
 app.secret_key = 'up to you to guest'
@@ -18,6 +25,20 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 db_session = DBSession()
+
+# Google authentication
+oauth = OAuth()
+google = oauth.remote_app('google',
+                          base_url='https://www.google.com/accounts/',
+                          authorize_url='https://accounts.google.com/o/oauth2/auth',
+                          request_token_url=None,
+                          request_token_params={'scope': 'https://www.googleapis.com/auth/userinfo.email',
+                                                'response_type': 'code'},
+                          access_token_url='https://accounts.google.com/o/oauth2/token',
+                          access_token_method='POST',
+                          access_token_params={'grant_type': 'authorization_code'},
+                          consumer_key=GOOGLE_CLIENT_ID,
+                          consumer_secret=GOOGLE_CLIENT_SECRET)
 
 """
 Ref to decorator: http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
@@ -142,53 +163,64 @@ def Delete_Item(itemID):
 
 @app.route('/login', methods=['GET', 'POST'])
 def Login():
-    if request.method == 'GET':
-        return render_template('login.html')
-    elif request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username is None or password is None:
-            flash('Missing username or password', 'danger')
-            return redirect(url_for('Login'))
+    if get_access_token() is None:
+        callback=url_for('authorized', _external=True)
+        return google.authorize(callback=callback)
+    else:
+        flash('You have been logged in already!', 'success')
+        return redirect(url_for('Index'))
 
-        user = db_session.query(User).filter_by(username=username).first()
-        if user.verify_password(password) is False:
-            flash('Invalid username or password! Try again', 'danger')
-            return redirect(url_for('Login'))
-        else:
-            session['username'] = username
-            return redirect(url_for('Index'))
+@app.route(REDIRECT_URI)
+@google.authorized_handler
+def authorized(resp):
+    access_token = resp['access_token']
+    session['access_token'] = access_token, ''
+
+    access_token = session.get('access_token')[0]
+    from urllib2 import Request, urlopen, URLError
+ 
+    headers = {'Authorization': 'OAuth '+access_token}
+    req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
+                  None, headers)
+    try:
+        res = urlopen(req)
+    except URLError, e:
+        if e.code == 401:
+            # Unauthorized - bad token
+            session.pop('access_token', None)
+
+        return redirect(url_for('Login'))
+ 
+    # get json of user info
+    user_info = json.loads(res.read())
+    
+    # store username in session
+    session['username'] = user_info['email']
+
+    user = db_session.query(User).filter_by(username=user_info['email']).first()
+    
+    # Create new user if he is not existed
+    if user is None:
+        user = User(username=user_info['email'],
+                    password='')
+    
+        db_session.add(user)
+        db_session.commit()
+
+    flash('You has been logged in successfully!', 'success')
+    return redirect(url_for('Index'))
+
+
+@google.tokengetter
+def get_access_token():
+    return session.get('access_token')
 
 
 @app.route('/logout')
 def Logout():
+    session.pop('access_token', None)
     session.pop('username', None)
     return redirect(url_for('Index'))
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def Register():
-    if request.method == 'GET':
-        return render_template('register.html')
-    elif request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username is None or password is None:
-            flash('Missing username or password', 'danger')
-            return redirect(url_for('Register'))
-
-        user = db_session.query(User).filter_by(username=username).first()
-        if user is not None:
-            flash('Username has been registered, try another!', 'danger')
-            return redirect(url_for('Register'))
-
-        # Save new user
-        user = User(username=username)
-        user.hash_password(password)
-        db_session.add(user)
-        db_session.commit()
-        flash('User was successfully added', 'success')
-        return redirect(url_for('Login'))
 
 
 @app.route('/catalog.json')

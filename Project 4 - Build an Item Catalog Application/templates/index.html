@@ -16,11 +16,13 @@
 		<header class="flex-container-row">
 			<div class="padder"></div>
 			<div class="app-title"><h1><a href="/">Catalog App</a></h1></div>
+			<div class="app-logout">
 			{% if 'username' in session %}
-			<div class="app-logout"><form action="/logout" method="get"><button class="btn btn-danger">Logout</button></form></div>
+			<form action="/logout" method="get"><button class="btn btn-danger">Logout</button></form>
 			{% else %}
-			<div class="app-logout"><form action="/login" method="get"><button class="btn btn-danger">Login</button></form></div>
+			<form action="/login" method="get"><button class="btn btn-danger">Login</button></form>
 			{% endif %}
+			</div>
 			<div class="padder"></div>
 		</header>
 		

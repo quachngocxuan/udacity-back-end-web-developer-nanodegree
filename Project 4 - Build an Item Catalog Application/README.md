@@ -37,6 +37,10 @@ It may need to change writable permission for the db file
 $ sudo chmod a+w catalog.db
 ```
 
+### Setup Google Login
+Create a Google credential from [this link](https://console.developers.google.com/apis/credentials).
+And replace ```client-id``` and ```secret key``` in ```application.py```
+
 ### Running server
 ```
 $ python application.py
@@ -109,3 +113,4 @@ Table "user"
 
 ## References
 - [Login require Decorator](http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/)
+- [Login to your Flask app with Google](https://pythonspot.com/en/login-to-flask-app-with-google/)
