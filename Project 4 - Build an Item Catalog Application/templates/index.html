@@ -41,14 +41,18 @@
 			    
 				<div class="main-content flex-container-row">
 					<section class="category-section">
+						{% if 'username' in session %}
 						<h4><a href="/add-category">Add category</a></h4>
+						{% endif %}
 						<h2>Categories</h2>
 						{% for category in categories %}
 						<p><a href="/items/{{ category.id }}">{{ category.title }}</a></p>
 						{% endfor %}
 					</section>
 					<section class="item-section">
+						{% if 'username' in session %}
 						<h4><a href="/add-item">Add item</a></h4>
+						{% endif %}
 						<h2>Latest items</h2>
 						{% for item in items %}
 						<p><a href="/item-details/{{ item.id }}">{{ item.title }}</a> <em>({{ item.category.title }})</em></p>

@@ -15,5 +15,11 @@ các file tĩnh vào thư mục static (thư mục jinga2 yêu cầu)
 python database_setup.py
 
 4. Deploy lên heroku
+- Tạo project trên heroku
 $ heroku create udacity-catalog-item
+- Kết nối git với heroku
+$ heroku git:remote -a udacity-catalog-item
+- Thiết lập build pack
+$ heroku buildpacks:set heroku/python
+- Đẩy lên heroku
 $ git push heroku master

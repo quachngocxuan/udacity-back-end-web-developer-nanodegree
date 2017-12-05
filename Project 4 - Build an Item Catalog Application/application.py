@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from flask import Flask, render_template, \
     flash, request, redirect, url_for, jsonify, session
 from sqlalchemy import create_engine, desc
@@ -9,6 +11,13 @@ from functools import wraps
 app = Flask(__name__)
 app.secret_key = 'up to you to guest'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.debug = True
+
+engine = create_engine('sqlite:///catalog.db')
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+db_session = DBSession()
 
 """
 Ref to decorator: http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
@@ -190,11 +199,4 @@ def Catalog_JSON():
     return jsonify(Category=[i.serialize for i in categories])
 
 if __name__ == '__main__':
-    engine = create_engine('sqlite:///catalog.db')
-    Base.metadata.bind = engine
-
-    DBSession = sessionmaker(bind=engine)
-    db_session = DBSession()
-
-    app.debug = True
     app.run(host='0.0.0.0', port=8080)
