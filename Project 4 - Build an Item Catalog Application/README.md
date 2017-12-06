@@ -6,7 +6,7 @@
 * [How to Run](#how-to-run)
 * [Features](#features)
 * [Database](#database)
-* [Creadits](#credits)
+* [Credits](#credits)
 * [References](#references)
 
 ## Project Overview
