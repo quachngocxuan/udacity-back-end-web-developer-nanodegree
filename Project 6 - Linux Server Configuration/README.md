@@ -249,7 +249,7 @@ ppp is the real password
 
 Grant privileges access
 ```
-GRANT ALL PRIVILEDGES ON DATABASE catalog TO uda;
+GRANT ALL PRIVILEGES ON DATABASE catalog TO uda;
 ```
 
 Update ```database_setup``` to migrate from sqlite to postgreSQL by change ```create_engine```. Change ```PASSWORD``` to your DB password.
